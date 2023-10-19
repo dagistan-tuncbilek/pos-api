@@ -1,0 +1,267 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id            Int            @id @default(autoincrement()) @db.UnsignedInt
+  name          String         @db.TinyText
+  vat           String?        @db.TinyText
+  email         String?        @db.TinyText
+  phone         String?        @db.TinyText
+  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime       @default(now())
+  customerTypes CustomerType[]
+  customers     Customer[]
+  users         User[]
+
+  @@map("companies")
+}
+
+model User {
+  id        Int       @id @default(autoincrement()) @db.UnsignedInt
+  companyId Int?      @db.UnsignedInt
+  name      String    @db.TinyText
+  jobTitle  String?   @db.TinyText
+  email     String?   @db.TinyText
+  phone     String?   @db.TinyText
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  role      Role
+  projects  Project[]
+  reports   Report[]
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("users")
+}
+
+model Customer {
+  id        Int       @id @default(autoincrement()) @db.UnsignedInt
+  companyId Int       @db.UnsignedInt
+  number    String    @db.TinyText
+  name      String    @db.TinyText
+  vat       String?   @db.TinyText
+  note      String?   @db.TinyText
+  daylite   Boolean   @default(false)
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  projects  Project[]
+  addresses Address[]
+  contacts  Contact[]
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("customers")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  customerId Int      @db.UnsignedInt
+  street     String?  @db.TinyText
+  city       String?  @db.TinyText
+  country    String?  @db.TinyText
+  postcode   String?  @db.TinyText
+  state      String?  @db.TinyText
+  type       String?  @db.TinyText
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  Int?     @db.UnsignedInt
+
+  @@map("address")
+}
+
+model Contact {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  customerId Int      @db.UnsignedInt
+  name       String?  @db.TinyText
+  jobTitle   String?  @db.TinyText
+  phone      String?  @db.TinyText
+  email      String?  @db.TinyText
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  Int?     @db.UnsignedInt
+
+  @@map("contacts")
+}
+
+model CustomerType {
+  id         Int        @id @default(autoincrement()) @db.UnsignedInt
+  companyId  Int        @db.UnsignedInt
+  type       String     @db.TinyText
+  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime   @default(now())
+  properties Property[]
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("customer_types")
+}
+
+model Property {
+  id             Int          @id @default(autoincrement()) @db.UnsignedInt
+  customerTypeId Int          @db.UnsignedInt
+  name           String       @db.TinyText
+  inputType      InputType
+  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime     @default(now())
+  validations    Validation[]
+  customerType   CustomerType @relation(fields: [customerTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("properties")
+}
+
+model Validation {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  propertyId Int      @db.UnsignedInt
+  maxLength  Int?     @db.UnsignedInt
+  minLength  Int?     @db.UnsignedInt
+  max        Int?     @db.Int
+  min        Int?     @db.Int
+  isEmail    Boolean?
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("validations")
+}
+
+model Project {
+  id             Int         @id @default(autoincrement()) @db.UnsignedInt
+  customerId     Int         @db.UnsignedInt
+  userId         Int?        @db.UnsignedInt
+  number         String      @db.TinyText
+  name           String      @db.TinyText
+  description    String      @db.TinyText
+  serviceType    String      @db.TinyText
+  resources      Boolean     @default(true)
+  resourcesCar   String?     @db.TinyText
+  riskAcceptable Boolean     @default(true)
+  riskCar        String?     @db.TinyText
+  subcontractor  String      @db.TinyText
+  daylite        Boolean     @default(false)
+  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime    @default(now())
+  customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user           User?       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orders         Order?
+  reports        Report[]
+  documents      Media[]
+  invoices       Invoice[]
+  quotations     Quotation[]
+  expenses       Expense[]
+
+  @@map("projects")
+}
+
+model Order {
+  id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  projectId      Int       @unique @db.UnsignedInt
+  date           DateTime?
+  deliveryDate   DateTime?
+  completionDate DateTime?
+  price          Float?
+  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime  @default(now())
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("orders")
+}
+
+model Report {
+  id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  projectId      Int       @db.UnsignedInt
+  documentId     Int?      @unique @db.UnsignedInt
+  type           String    @db.TinyText
+  userId         Int       @db.UnsignedInt
+  reviewDate     DateTime?
+  completionDate DateTime?
+  price          Float?
+  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime  @default(now())
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  reviewedBy     User?     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  document       Media?    @relation(fields: [documentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("reports")
+}
+
+model Invoice {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  projectId  Int       @db.UnsignedInt
+  documentId Int?      @unique @db.UnsignedInt
+  invoiceId  String?   @db.TinyText
+  price      Float?
+  date       DateTime?
+  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime  @default(now())
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  document   Media?    @relation(fields: [documentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("invoices")
+}
+
+model Quotation {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  projectId   Int       @db.UnsignedInt
+  quotationId String?   @db.TinyText
+  price       Float?
+  date        DateTime?
+  isDone      Boolean   @default(false)
+  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("quotations")
+}
+
+model Expense {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  projectId  Int       @db.UnsignedInt
+  vehicle    String    @db.TinyText
+  cost       Float
+  distance   Int
+  date       DateTime?
+  travelTime Int
+  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime  @default(now())
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("expenses")
+}
+
+model Media {
+  id           Int      @id @default(autoincrement()) @db.UnsignedInt
+  projectId    Int      @db.UnsignedInt
+  path         String   @db.TinyText
+  filename     String   @db.TinyText
+  size         Int      @db.UnsignedInt
+  originalname String   @db.TinyText
+  mimetype     String   @db.TinyText
+  description  String   @db.TinyText
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  report       Report?
+  Invoice      Invoice?
+
+  @@map("medias")
+}
+
+enum InputType {
+  Text
+  Number
+  Checkbox
+  Date
+}
+
+enum Role {
+  SuperAdmin
+  Admin
+  Developer
+  User
+}
