@@ -148,7 +148,7 @@ model Project {
   createdAt      DateTime    @default(now())
   customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user           User?       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  orders         Order?
+  order          Order?
   reports        Report[]
   documents      Media[]
   invoices       Invoice[]

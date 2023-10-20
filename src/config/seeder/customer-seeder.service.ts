@@ -33,6 +33,7 @@ export class CustomerSeederService {
                 await this.createOrder(project);
                 await this.createExpenses(project);
                 await this.createReports(project, users);
+                await this.createInvoices(project);
             }
         }
     }
@@ -129,6 +130,7 @@ export class CustomerSeederService {
                     distance: faker.number.int({min: 20, max: 2200}),
                     vehicle: 'Car',
                     travelTime: faker.number.int({min: 1, max: 21}),
+                    date: faker.date.anytime().toISOString(),
                 },
                 {
                     projectId: project.id,
