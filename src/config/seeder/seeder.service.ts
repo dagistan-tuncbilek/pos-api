@@ -42,7 +42,8 @@ export class SeederService {
                 jobTitle: faker.person.jobTitle(),
                 email: faker.internet.email(),
                 phone: faker.phone.number(),
-                role: Role.User
+                role: Role.User,
+                password: 'password'
             });
         }
         await this.prisma.user.createMany({data: users});

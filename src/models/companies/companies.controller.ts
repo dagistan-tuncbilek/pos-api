@@ -1,8 +1,10 @@
-import {Body, Controller, Get, Param, ParseIntPipe, Patch} from '@nestjs/common';
+import {Body, Controller, Get, Param, ParseIntPipe, Patch, UseGuards} from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import {UpdateCompanyDto} from "../update-company.dto";
+import {AuthGuard} from "../../core/guards/auth-guard.service";
 
 @Controller('companies')
+@UseGuards(AuthGuard)
 export class CompaniesController {
 
   constructor(private readonly companiesService: CompaniesService) {}
