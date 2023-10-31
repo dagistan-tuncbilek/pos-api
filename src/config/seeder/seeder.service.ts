@@ -10,11 +10,15 @@ export class SeederService {
     constructor(private prisma: PrismaService, private customerSeeder: CustomerSeederService) {}
 
     async seed() {
-        const company = await this.createCompany();
-        await this.createUsers(company);
-        await this.createCustomerTypes(company);
-        await this.customerSeeder.seedCustomers(company);
-        return {message: 'Seed completed!'}
+        const company = await this.prisma.company.findFirst();
+        if (!company){
+            const company = await this.createCompany();
+            await this.createUsers(company);
+            await this.createCustomerTypes(company);
+            await this.customerSeeder.seedCustomers(company);
+            return {message: 'Seed completed!'}
+        }
+        return {message: 'DB is not empty!'}
     }
 
     private async createCompany() {

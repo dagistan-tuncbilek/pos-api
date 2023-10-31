@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {BaseRepositoryService} from "./base-repository.service";
 import {tr} from "@faker-js/faker";
+import {UpdateCompanyDto} from "../../models/update-company.dto";
 
 @Injectable()
 export class CompaniesRepositoryService extends BaseRepositoryService {
@@ -29,5 +30,16 @@ export class CompaniesRepositoryService extends BaseRepositoryService {
                 }
             }
         })
+    }
+
+    async updateCompany(id: number, updateCompanyDto: UpdateCompanyDto) {
+        return this.prisma.company
+            .update({ where: { id }, data: updateCompanyDto })
+            .catch(error => this.handleRepositoryError({
+                error: error,
+                method: 'updateCompany',
+                props: {id, updateCompanyDto},
+                className: CompaniesRepositoryService.name
+            }));
     }
 }

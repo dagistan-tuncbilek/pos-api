@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: seacollect-api
+    image: dtuncbilek/seacollect-api:2023.17.5
+
+  micro:
+    build:
+      context: .
+      dockerfile: ./apps/seacollect-micro/Dockerfile
+    container_name: seacollect-micro
+    image: dtuncbilek/seacollect-micro:2023.17.5
+
+networks:
+  mariadb_network:
+    external: true
+  redis_network:
+    external: true
+  nginxproxymanager_default:
+    external: true
+
+# Change versions, env and git push
+# build app
+# docker compose build
+# docker push dtuncbilek/seacollect-api:2023.17.5
+# docker push dtuncbilek/seacollect-micro:2023.17.5
+
+# docker save -o /home/dt/Documents/docker-images/seacollect-micro.tar dtuncbilek/seacollect-micro:2023.11.13
+
+# TESTING
+# scp -P 11022 /home/dt/Documents/docker-images/seacollect-micro.tar dagistan@148.251.134.103:/apps/temp/
+# PROD
+# scp -P 11022 /home/dt/Documents/docker-images/seacollect-micro.tar dagistan@178.63.93.62:/apps/temp/
+
+# docker load -i /apps/temp/seacollect-micro.tar
+# rm /apps/temp/seacollect-micro.tar
+

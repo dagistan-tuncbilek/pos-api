@@ -1,0 +1,12 @@
+storage/
+# node_modules
+# dist/
+test
+.idea
+.dockerignore
+.eslintrc.js
+.gitignore
+.prettierrc
+docker-compose.yml
+Dockerfile
+package-lock.json

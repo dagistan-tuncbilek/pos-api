@@ -29,6 +29,7 @@ model User {
   name      String    @db.TinyText
   jobTitle  String?   @db.TinyText
   email     String?   @db.TinyText
+  password  String?   @db.TinyText
   phone     String?   @db.TinyText
   updatedAt DateTime  @updatedAt
   createdAt DateTime  @default(now())
@@ -250,6 +251,17 @@ model Media {
   Invoice      Invoice?
 
   @@map("medias")
+}
+
+model AppLog {
+  id        String   @id @default(uuid())
+  level     String   @db.VarChar(255)
+  message   String?  @db.Text
+  stack     Json?
+  context   String
+  timestamp DateTime @default(now())
+
+  @@map("app_logs")
 }
 
 enum InputType {
