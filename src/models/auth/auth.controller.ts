@@ -2,11 +2,13 @@ import {Body, Controller, Get, HttpCode, Request, HttpStatus, Post, UseGuards} f
 import { AuthService } from './auth.service';
 import {LoginDto} from "./dto/login.dto";
 import {AuthGuard, SkipAuth} from "../../core/guards/auth-guard.service";
+import {AsyncLocalStorage} from "async_hooks";
+import {JwtUser} from "../../core/models/jwt-user";
 
 @Controller('auth')
 export class AuthController {
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private als: AsyncLocalStorage<JwtUser>) {}
 
   @SkipAuth()
   @HttpCode(HttpStatus.OK)
@@ -17,7 +19,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req: any) {
-    return req.user;
+  getProfile() {
+    return {user: this.als.getStore()};
   }
 }

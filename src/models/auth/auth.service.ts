@@ -3,6 +3,7 @@ import {UsersRepositoryService} from "../../core/repositories/users-repository.s
 import {LoginDto} from "./dto/login.dto";
 import {JwtService} from "@nestjs/jwt";
 import {DateTime} from "luxon";
+import {JwtUser} from "../../core/models/jwt-user";
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
         if (user?.password !== loginDto.password) {
             throw new UnauthorizedException('Email or password is incorrect!');
         }
-        const payload = {id: user.id, email: user.email, companyId: user.companyId};
+        const payload: JwtUser = {id: user.id, email: user.email, companyId: user.companyId};
         const expiresIn = loginDto.rememberMe
             ? 60 * 60 * 24 * 30  // 30 days
             : 60 * 60 * 5;       // 5 hours
