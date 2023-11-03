@@ -46,6 +46,10 @@ export class SeederService {
                 password: 'password'
             });
         }
+        users[0].email = 'robert.surma@seacotec.com';
+        users[1].email = 'marcus.von-busch@seacotec.com';
+        users[2].email = 'tobias.neumann@seacotec.com';
+        users[3].email = 'dagistan.tuncbilek@seacotec.com';
         await this.prisma.user.createMany({data: users});
     }
 

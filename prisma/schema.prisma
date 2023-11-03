@@ -255,13 +255,21 @@ model Media {
 
 model AppLog {
   id        String   @id @default(uuid())
-  level     String   @db.VarChar(255)
+  level     String   @db.TinyText
   message   String?  @db.Text
   stack     Json?
-  context   String
+  context   String   @db.TinyText
   timestamp DateTime @default(now())
 
   @@map("app_logs")
+}
+
+model PasswordReset {
+  email     String   @id @db.VarChar(255)
+  token     String   @db.VarChar(1000)
+  createdAt DateTime @default(now())
+
+  @@map("password_reset")
 }
 
 enum InputType {

@@ -23,7 +23,7 @@ export class AuthService {
             ? 60 * 60 * 24 * 30  // 30 days
             : 60 * 60 * 5;       // 5 hours
         return {
-            access_token: await this.jwtService.signAsync(payload, {expiresIn: expiresIn}),
+            token: await this.jwtService.signAsync(payload, {expiresIn: expiresIn}),
             expiresAt: DateTime.utc().toMillis() + expiresIn * 1000,
         };
     }

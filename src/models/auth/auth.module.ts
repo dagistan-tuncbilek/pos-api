@@ -3,26 +3,23 @@ import {AuthService} from './auth.service';
 import {AuthController} from './auth.controller';
 import {RepositoriesModule} from "../../core/repositories/repositories.module";
 import {JwtModule} from "@nestjs/jwt";
-import {APP_GUARD} from "@nestjs/core";
-import {AuthGuard} from "../../core/guards/auth-guard.service";
+import {ConfigService} from "@nestjs/config";
 
 @Module({
     controllers: [AuthController],
     providers: [
         AuthService,
-        {
-            provide: APP_GUARD,
-            useClass: AuthGuard,
-        },
     ],
     imports: [
-        JwtModule.register({
-            global: true,
-            secret: 'DO NOT USE OUTSIDE OF THE SOURCE CODE.',
-            signOptions: { expiresIn: '60s' },
+        JwtModule.registerAsync({
+            useFactory: async (config: ConfigService) => ({
+                secret: config.getOrThrow('JWT_SECRET')
+            }),
+            inject: [ConfigService],
         }),
         RepositoriesModule
-    ]
+    ],
+    exports: [JwtModule]
 })
 export class AuthModule {
 }

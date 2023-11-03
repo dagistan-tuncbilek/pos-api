@@ -1,4 +1,4 @@
-import {Logger, Module} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {GlobalModule} from './core/global/global.module';
@@ -9,7 +9,10 @@ import {ProjectsModule} from './models/projects/projects.module';
 import {AuthModule} from './models/auth/auth.module';
 import {CustomerTypesModule} from './models/customer-types/customer-types.module';
 import {RepositoriesModule} from './core/repositories/repositories.module';
-import {AppLogger} from "./core/global/app-logger";
+import {APP_GUARD} from "@nestjs/core";
+import {ThrottlerModule} from "@nestjs/throttler";
+import {ConfigModule} from "@nestjs/config";
+import {AuthGuard} from "./core/guards/auth-guard";
 
 @Module({
     imports: [
@@ -20,11 +23,20 @@ import {AppLogger} from "./core/global/app-logger";
         ProjectsModule,
         AuthModule,
         CustomerTypesModule,
-        RepositoriesModule
+        RepositoriesModule,
+        ConfigModule.forRoot({isGlobal: true, cache: true}),
+        ThrottlerModule.forRoot([{
+            ttl: 60000,
+            limit: 20,
+        }]),
     ],
     controllers: [AppController],
     providers: [
         AppService,
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard,
+        },
     ],
 })
 export class AppModule {
