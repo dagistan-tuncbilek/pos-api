@@ -1,12 +1,12 @@
 # For ubuntu vs linux systems, but first build app, npm run build
-FROM node:18.16.1-slim
+FROM node:18.18.2-slim
 RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
 WORKDIR /app
 COPY --chown=node:node node_modules ./node_modules
 COPY --chown=node:node tsconfig*.json ./
 COPY --chown=node:node package.json ./
 COPY --chown=node:node prisma ./prisma/
-COPY --chown=node:node dist/apps/seacollect-api ./dist
+COPY --chown=node:node dist ./dist
 USER node
 EXPOSE 3000
 CMD ["dumb-init", "node", "dist/main"]

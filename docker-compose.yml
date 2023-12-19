@@ -4,29 +4,14 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: seacollect-api
-    image: dtuncbilek/seacollect-api:2023.17.5
+    container_name: pos-api
+    image: dtuncbilek/pos-api:0.2.1
 
-  micro:
-    build:
-      context: .
-      dockerfile: ./apps/seacollect-micro/Dockerfile
-    container_name: seacollect-micro
-    image: dtuncbilek/seacollect-micro:2023.17.5
 
-networks:
-  mariadb_network:
-    external: true
-  redis_network:
-    external: true
-  nginxproxymanager_default:
-    external: true
-
-# Change versions, env and git push
 # build app
 # docker compose build
-# docker push dtuncbilek/seacollect-api:2023.17.5
-# docker push dtuncbilek/seacollect-micro:2023.17.5
+# docker push dtuncbilek/pos-api:0.2.1
+
 
 # docker save -o /home/dt/Documents/docker-images/seacollect-micro.tar dtuncbilek/seacollect-micro:2023.11.13
 
