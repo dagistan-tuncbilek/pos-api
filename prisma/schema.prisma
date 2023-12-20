@@ -42,19 +42,21 @@ model User {
 }
 
 model Customer {
-  id        Int       @id @default(autoincrement()) @db.UnsignedInt
-  companyId Int       @db.UnsignedInt
-  number    String    @db.TinyText
-  name      String    @db.TinyText
-  vat       String?   @db.TinyText
-  note      String?   @db.TinyText
-  daylite   Boolean   @default(false)
-  updatedAt DateTime  @updatedAt
-  createdAt DateTime  @default(now())
-  projects  Project[]
-  addresses Address[]
-  contacts  Contact[]
-  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id             Int           @id @default(autoincrement()) @db.UnsignedInt
+  companyId      Int           @db.UnsignedInt
+  customerTypeId Int?          @db.UnsignedInt
+  number         String        @db.TinyText
+  name           String        @db.TinyText
+  vat            String?       @db.TinyText
+  note           String?       @db.TinyText
+  daylite        Boolean       @default(false)
+  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime      @default(now())
+  projects       Project[]
+  addresses      Address[]
+  contacts       Contact[]
+  company        Company       @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customerType   CustomerType? @relation(fields: [customerTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("customers")
 }
@@ -99,6 +101,7 @@ model CustomerType {
   createdAt  DateTime   @default(now())
   properties Property[]
   company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customers  Customer[]
 
   @@map("customer_types")
 }
