@@ -3,6 +3,7 @@ import {PrismaService} from "../../core/global/prisma.service";
 import {faker} from "@faker-js/faker";
 import {Company, InputType, Prisma, Role} from "@prisma/client";
 import {CustomerSeederService} from "./customer-seeder.service";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SeederService {
@@ -43,7 +44,7 @@ export class SeederService {
                 email: faker.internet.email(),
                 phone: faker.phone.number(),
                 role: Role.User,
-                password: 'password'
+                password: await this.hashPassword('password')
             });
         }
         users[0].email = 'robert.surma@seacotec.com';
@@ -51,6 +52,11 @@ export class SeederService {
         users[2].email = 'tobias.neumann@seacotec.com';
         users[3].email = 'dagistan.tuncbilek@seacotec.com';
         await this.prisma.user.createMany({data: users});
+    }
+
+    private async hashPassword(password: string): Promise<string> {
+        const saltRounds = 10;
+        return bcrypt.hash(password, saltRounds);
     }
 
     private async createCustomerTypes(company: Company) {
