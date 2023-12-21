@@ -19,12 +19,23 @@ export class CustomerTypesRepositoryService extends BaseRepositoryService {
 
     async update(id: number, updateCustomerTypeDto: UpdateCustomerTypeDto) {
         return this.prisma.customerType
-            .update({ where: { id }, data: updateCustomerTypeDto, include: { properties: true } })
+            .update({where: {id}, data: updateCustomerTypeDto, include: {properties: true}})
             .catch(error => this.handleRepositoryError({
                 error,
                 className: CustomerTypesRepositoryService.name,
                 method: 'update',
                 props: {id, updateCustomerTypeDto}
+            }));
+    }
+
+    async delete(id: number) {
+        return this.prisma.customerType
+            .delete({where: {id: id}})
+            .catch(error => this.handleRepositoryError({
+                error,
+                className: CustomerTypesRepositoryService.name,
+                method: 'delete',
+                props: {id}
             }));
     }
 }

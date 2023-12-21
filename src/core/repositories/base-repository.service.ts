@@ -8,7 +8,7 @@ export class BaseRepositoryService {
     constructor(protected prisma: PrismaService,) { }
 
     handleRepositoryError({error, method, className, props}): string {
-        // console.log(e)
+        console.log(error)
         let message = 'Database query error.';
 
         if (error instanceof Prisma.PrismaClientKnownRequestError) {

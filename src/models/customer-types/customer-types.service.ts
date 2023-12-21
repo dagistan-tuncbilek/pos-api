@@ -15,4 +15,8 @@ export class CustomerTypesService {
     update(id: number, updateCustomerTypeDto: UpdateCustomerTypeDto) {
         return this.repo.update(id, updateCustomerTypeDto);
     }
+
+    delete(id: number) {
+        return this.repo.delete(id);
+    }
 }

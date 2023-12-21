@@ -13,6 +13,7 @@ import {APP_GUARD} from "@nestjs/core";
 import {ThrottlerModule} from "@nestjs/throttler";
 import {ConfigModule} from "@nestjs/config";
 import {AuthGuard} from "./core/guards/auth-guard";
+import { PropertiesModule } from './models/properties/properties.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import {AuthGuard} from "./core/guards/auth-guard";
             ttl: 60000,
             limit: 20,
         }]),
+        PropertiesModule,
     ],
     controllers: [AppController],
     providers: [
