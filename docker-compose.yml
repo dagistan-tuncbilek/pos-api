@@ -5,12 +5,12 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: pos-api
-    image: dtuncbilek/pos-api:0.2.1
+    image: dtuncbilek/pos-api:0.2.2
 
 
 # build app
 # docker compose build
-# docker push dtuncbilek/pos-api:0.2.1
+# docker push dtuncbilek/pos-api:0.2.2
 
 
 # docker save -o /home/dt/Documents/docker-images/seacollect-micro.tar dtuncbilek/seacollect-micro:2023.11.13

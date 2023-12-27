@@ -5,11 +5,13 @@ import {ProjectsRepositoryService} from './projects-repository.service';
 import {CustomerTypesRepositoryService} from './customer-types-repository.service';
 import {BaseRepositoryService} from './base-repository.service';
 import {PropertiesRepositoryService} from "./properties-repository.service";
+import {CustomersRepositoryService} from "./customers-repository.service";
 
 @Module({
     providers: [
         BaseRepositoryService,
         CompaniesRepositoryService,
+        CustomersRepositoryService,
         UsersRepositoryService,
         ProjectsRepositoryService,
         CustomerTypesRepositoryService,
@@ -17,6 +19,7 @@ import {PropertiesRepositoryService} from "./properties-repository.service";
     ],
     exports: [
         CompaniesRepositoryService,
+        CustomersRepositoryService,
         UsersRepositoryService,
         ProjectsRepositoryService,
         CustomerTypesRepositoryService,

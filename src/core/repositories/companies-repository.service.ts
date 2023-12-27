@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {BaseRepositoryService} from "./base-repository.service";
 import {tr} from "@faker-js/faker";
-import {UpdateCompanyDto} from "../../models/update-company.dto";
+import {UpdateCompanyDto} from "../../models/companies/dto/update-company.dto";
 
 @Injectable()
 export class CompaniesRepositoryService extends BaseRepositoryService {

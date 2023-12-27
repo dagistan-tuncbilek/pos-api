@@ -50,6 +50,7 @@ model Customer {
   vat            String?       @db.TinyText
   note           String?       @db.TinyText
   daylite        Boolean       @default(false)
+  properties     Json?
   updatedAt      DateTime      @updatedAt
   createdAt      DateTime      @default(now())
   projects       Project[]
@@ -111,6 +112,7 @@ model Property {
   customerTypeId Int          @db.UnsignedInt
   name           String       @db.TinyText
   inputType      InputType
+  optional       Boolean      @default(false)
   updatedAt      DateTime     @updatedAt
   createdAt      DateTime     @default(now())
   customerType   CustomerType @relation(fields: [customerTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)

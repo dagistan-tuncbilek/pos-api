@@ -7,9 +7,12 @@ import {BaseRepositoryService} from "./base-repository.service";
 export class PropertiesRepositoryService extends BaseRepositoryService {
 
     async create(createPropertyDto: CreatePropertyDto) {
-        const {name, inputType, customerTypeId, ...validationData} = createPropertyDto;
+        const {name, inputType, optional, customerTypeId, ...validationData} = createPropertyDto;
         return this.prisma.property
-            .create({data: {name, inputType, customerTypeId, validations: {create: validationData}}})
+            .create({
+                data: {name, inputType, optional, customerTypeId, validations: {create: validationData}},
+                include: { validations: true }
+            })
             .catch(error => this.handleRepositoryError({
                 error,
                 className: PropertiesRepositoryService.name,
@@ -19,14 +22,14 @@ export class PropertiesRepositoryService extends BaseRepositoryService {
     }
 
     async update(id: number, updatePropertyDto: UpdatePropertyDto) {
-        const {name, inputType, ...validationData} = updatePropertyDto;
+        const {name, inputType, optional, ...validationData} = updatePropertyDto;
         try {
             if (Object.keys(validationData).length) {
                 await this.prisma.validation.update({where: {propertyId: id}, data: validationData});
             }
             return this.prisma.property.update({
                 where: {id: id},
-                data: {name, inputType},
+                data: {name, inputType, optional},
                 include: {validations: true}
             });
         } catch (error) {

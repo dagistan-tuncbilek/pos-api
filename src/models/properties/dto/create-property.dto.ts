@@ -44,4 +44,8 @@ export class CreatePropertyDto {
     @IsBoolean()
     @IsOptional()
     isEmail: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    optional: boolean;
 }
