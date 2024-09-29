@@ -1,5 +1,5 @@
 # For ubuntu vs linux systems, but first build app, npm run build
-FROM node:18.18.2-slim
+FROM node:18.20.4-slim
 RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
 WORKDIR /app
 COPY --chown=node:node node_modules ./node_modules
